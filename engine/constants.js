@@ -1,0 +1,12 @@
+export const UNTAP_STEP = 'untap-step';
+export const UPKEEP_STEP = 'upkeep-step';
+export const DRAW_STEP = 'draw-step';
+export const PRE_MAIN_PHASE = 'pre-main-phase';
+export const BEGINNING_COMBAT_STEP = 'beginning-combat-step';
+export const DECLARE_ATTACKERS_STEP = 'declare-attackers-step';
+export const DECLARE_BLOCKERS_STEP = 'declare-blockers-step';
+export const COMBAT_DAMAGE_STEP = 'combat-damage-step';
+export const END_COMBAT_STEP = 'end-combat-step';
+export const POST_MAIN_PHASE = 'post-main-step';
+export const END_STEP = 'end-step';
+export const CLEANUP_STEP = 'cleanup-step';
