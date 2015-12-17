@@ -50,9 +50,9 @@ export default function checkStateBasedActions(state) {
   	else if (planeswalkers.uniq('name')) {
 
     }
-  }
+  })
 
-  
+
   // make sure auras are attached
 
 	// equipment move off of stuff
