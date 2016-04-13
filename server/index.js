@@ -1,15 +1,40 @@
-var app = require('express').createServer();
-var io = require('socket.io')(app);
+import ws from 'ws';
+import url from 'url';
+import http from 'http';
+import express from 'express';
+//import Game from '../engine/game';
 
-app.listen(7777);
+const server = http.createServer();
+const WebSocketServer = ws.Server;
+const wss = new WebSocketServer({ server });
+const app = express();
 
-app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/index.html');
-});
+app.use(function (req, res) { res.send({ msg: "hello" }); });
 
-io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
+const games = [];
+
+let count = 0;
+
+wss.on('connection', socket => {
+  count++;
+
+  if (count === 2) {
+    socket.send('hello')
+  }
+
+  socket.on('message', messageString => {
+    const message = JSON.parse(messageString);
+
+    if (message.type === 'join-room') {
+      rooms.find(room => room.id === message.data.id).addPlayer(message.data.player);
+    }
+
+    if ( message.type === 'room-list' ) {
+      socket.send(JSON.stringify(games));
+    }
   });
+
 });
+
+server.on('request', app);
+server.listen(3000, () => console.log(`Listening on ${server.address().port}`));
