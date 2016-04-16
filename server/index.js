@@ -1,32 +1,32 @@
+// mocha --compilers js:babel-core/register --require babel-polyfill
 import ws from 'ws';
 import url from 'url';
 import http from 'http';
+import 'babel-polyfill';
+import 'babel-core/register';
 import express from 'express';
-//import Game from '../engine/game';
+import routes from './routes/index';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 
 const server = http.createServer();
 const WebSocketServer = ws.Server;
 const wss = new WebSocketServer({ server });
 const app = express();
 
-app.use(function (req, res) { res.send({ msg: "hello" }); });
+app.use(cookieParser('SIGNED-COOKIE-SECRET'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(routes);
 
 const games = [];
 
-let count = 0;
-
 wss.on('connection', socket => {
-  count++;
-
-  if (count === 2) {
-    socket.send('hello')
-  }
-
   socket.on('message', messageString => {
     const message = JSON.parse(messageString);
 
     if (message.type === 'join-room') {
-      rooms.find(room => room.id === message.data.id).addPlayer(message.data.player);
+      // rooms.find(room => room.id === message.data.id).addPlayer(message.data.player);
     }
 
     if ( message.type === 'room-list' ) {

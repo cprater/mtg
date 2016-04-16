@@ -1,0 +1,10 @@
+[
+  {
+    "uid": "server",
+    "append": true,
+    "watch": true,
+    "script": "index.js",
+    "sourceDir": "/home/myuser/app2",
+    "args": ["--port", "8081"]
+  }
+]
