@@ -1,9 +1,17 @@
 import redis from './redis-promise';
 import SHA256 from 'crypto-js/sha256';
 
-export default async function authenticateUser(email, password) {
-  const ID = SHA256(email.toLowerCase()).toString();
-  const existingUser = await client.hgetallAsync(`user:${ID}`);
+export default async function authenticateUser(cookieHeader) {
+  const cookieParsed = cookieHeader.split('; ').reduce((pv, cv) => {
+    pv[cv.split('=')[0]] = cv.split('=')[1];
+    return pv;
+  }, {});
 
-  return existingUser.password === SHA256(password + existingUser.salt).toString();
+  const user = await redis.hgetallAsync(`user:${cookieParsed['login-user']}`);
+
+  return (
+    user &&
+    cookieParsed['login-token'] ===
+    SHA256(user.id + user.password + user.salt + user.email.toLowerCase()).toString()
+  ) ? user : false;
 }
